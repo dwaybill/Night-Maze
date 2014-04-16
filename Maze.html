@@ -25,6 +25,7 @@ var mazeWidth = 556;
 var mazeHeight = 556;
 var intervalVar;
 var midPoint = false;
+
 function drawMazeAndRectangle(rectX, rectY) {
     makeWhite(0, 0, canvas.width, canvas.height);
     var mazeImg = new Image();
@@ -51,7 +52,7 @@ function drawMazeAndRectangle(rectX, rectY) {
     };
     mazeImg.src = "custom-maze.gif";
 }
-function lightsOn(){
+function lampOn(){
     // Importing relevant classes
     var Lamp = illuminated.Lamp
             , RectangleObject = illuminated.RectangleObject
@@ -73,15 +74,16 @@ function lightsOn(){
 //        radius: 5,
 //        samples: 50
 //    });
-    var disc = new DiscObject({
-        center: new Vec2(100, 100),
-        radius: 30
-    });
-    var rect = new RectangleObject({
+
+    var rect1 = new RectangleObject({
         topleft: new Vec2(250, 200),
         bottomright: new Vec2(350, 250)
     });
-    var objects = [ disc, rect ];
+    var rect2 = new RectangleObject({
+        topleft: new Vec2(100, 250),
+        bottomright: new Vec2(150, 300)
+    });
+    var objects = [ rect1,rect2 ];
     var lighting1 = new Lighting({
         light: light1,
         objects: objects
@@ -91,7 +93,7 @@ function lightsOn(){
 //        objects: [ disc, rect ]
 //    });
 
-    var darkmask = new DarkMask({ lights: [light1, light2] });
+    var darkmask = new DarkMask({ lights: [light1] });
 
     lighting1.compute(mazeWidth, canvas.height);
 //    lighting2.compute(mazeWidth, canvas.height);
@@ -100,24 +102,26 @@ function lightsOn(){
     context.fillStyle = "black";
     context.fillRect(0, 0, mazeWidth, canvas.height);
 
-    context.fillStyle = "white";
+   // context.fillStyle = "white";
     context.beginPath();
-    disc.path(context);
+    rect1.path(context);
     context.fill();
     context.beginPath();
-    rect.path(context);
+    rect2.path(context);
     context.fill();
 
     context.globalCompositeOperation = "lighter";
     lighting1.render(context);
 //    lighting2.render(context);
 
-//    context.globalCompositeOperation = "source-over";
+    context.globalCompositeOperation = "source-over";
     darkmask.render(context);
 
 }
 function drawRectangle(x, y, style) {
-    makeWhite(currRectX, currRectY, 15, 15);
+   if (midPoint === true){
+       makeWhite(currRectX, currRectY, 15, 15);
+   }
     currRectX = x;
     currRectY = y;
     context.beginPath();
@@ -125,7 +129,6 @@ function drawRectangle(x, y, style) {
     context.closePath();
     context.fillStyle = style;
     context.fill();
-//    lightsOn();
 }
 function moveRect(e) {
     var newX;
@@ -154,7 +157,8 @@ function moveRect(e) {
             newY = currRectY;
             break;
         case 76: //L key
-            lightsOn();
+            lampOn();
+                console.log("l is pressed")
             break;
     }
     movingAllowed = canMoveTo(newX, newY);
@@ -194,6 +198,7 @@ function canMoveTo(destX, destY) {
                 canMove = 2; // 2 means: the mid point is reached
                 midpoint = true;
                 console.log("midpoint is true ");
+                console.log(midpoint);
                 break;
             }
             else if (data[i] === 0 && data[i + 1] === 255 && data[i + 2] === 0) { // #00FF00
