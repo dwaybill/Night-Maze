@@ -1177,9 +1177,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       this._cache = createCanvasAnd2dContext(w,h);
     var ctx = this._cache.ctx;
     ctx.save();
-    ctx.clearRect(0, 0, w, h);
+    ctx.clearRect(0, 30, w, h);
     ctx.fillStyle = this.color;
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillRect(0, 30, w, h);
     ctx.globalCompositeOperation = "destination-out";
     this.lights.forEach(function(light){
       light.mask(ctx);

@@ -30,17 +30,17 @@ function drawMazeAndRectangle(rectX, rectY) {
     makeWhite(0, 0, canvas.width, canvas.height);
     var mazeImg = new Image();
     mazeImg.onload = function () {
-        context.drawImage(mazeImg, 0, 0);
+        context.drawImage(mazeImg, 0, 30);
         drawRectangle(rectX, rectY, "#0000FF");
 
         context.beginPath();
-        context.arc(26, 500, 5, 0, 2 * Math.PI, false);//526,500
+        context.arc(26, 530, 5, 0, 2 * Math.PI, false);//526,500
         context.closePath();
         context.fillStyle = '#FFFF00';
         context.fill();
 
         context.beginPath();
-        context.arc(56, 500, 5, 0, 2 * Math.PI, false);//26,500
+        context.arc(56, 530, 5, 0, 2 * Math.PI, false);//26,500
         context.closePath();
         context.fillStyle = '#00FF00';
         context.fill();
@@ -69,14 +69,64 @@ function lampOn(){
     });
 
     var rect1 = new RectangleObject({
-        topleft: new Vec2(250, 200),
-        bottomright: new Vec2(350, 250)
+        topleft: new Vec2(426, 495),
+        bottomright: new Vec2(471, 544)
     });
     var rect2 = new RectangleObject({
-        topleft: new Vec2(100, 250),
-        bottomright: new Vec2(150, 300)
+        topleft: new Vec2(234, 416),
+        bottomright: new Vec2(345, 561)
     });
-    var objects = [ rect1,rect2 ];
+    var rect3 = new RectangleObject({
+        topleft: new Vec2(374,371),
+        bottomright: new Vec2(394,586)
+    });
+    var rect4 = new RectangleObject({
+        topleft: new Vec2(396,192),
+        bottomright: new Vec2(504,433)
+    });
+    var rect5 = new RectangleObject({
+        topleft: new Vec2(175,42),
+        bottomright: new Vec2(359,144)
+    });
+    var rect6 = new RectangleObject({
+        topleft: new Vec2(202,192),
+        bottomright: new Vec2(396,288)
+    });
+    var rect7 = new RectangleObject({
+        topleft: new Vec2(135,190),
+        bottomright: new Vec2(507,194)
+    });
+    var rect8 = new RectangleObject({
+        topleft: new Vec2(10,236),
+        bottomright: new Vec2(152,470)
+    });
+    var rect9 = new RectangleObject({
+        topleft: new Vec2(152,326),
+        bottomright: new Vec2(272,328)
+    });
+    var rect10 = new RectangleObject({
+        topleft: new Vec2(198,370),
+        bottomright: new Vec2(396,372)
+    });
+    var rect11 = new RectangleObject({
+        topleft: new Vec2(152,420),
+        bottomright: new Vec2(234, 422)
+    });
+    var rect12 = new RectangleObject({
+        topleft: new Vec2(194,580),
+        bottomright: new Vec2(195,498)
+    });
+    var rect13 = new RectangleObject({
+        topleft: new Vec2(471,495),
+        bottomright: new Vec2(550,493)
+    });
+
+
+
+
+
+
+    var objects = [ rect1,rect2,rect3,rect4,rect5,rect6,rect7,rect8,rect9,rect10,rect11,rect12,rect13];
 
     var lighting1 = new Lighting({
         light: light1,
@@ -94,14 +144,23 @@ function lampOn(){
     darkmask.compute(mazeWidth, canvas.height);
     //context.globalAlpha=0.10;
     context.fillStyle = "black";
-    context.fillRect(0, 0, mazeWidth, canvas.height);
+    context.fillRect(0, 30, mazeWidth, canvas.height);
 
    // context.fillStyle = "white";
     context.beginPath();
     rect1.path(context);
-    context.fill();
-    context.beginPath();
     rect2.path(context);
+    rect3.path(context);
+    rect4.path(context);
+    rect5.path(context);
+    rect6.path(context);
+    rect7.path(context);
+    rect8.path(context);
+    rect9.path(context);
+    rect10.path(context);
+    rect11.path(context);
+    rect12.path(context);
+    rect13.path(context);
     context.fill();
 
     context.globalCompositeOperation = "lighter";
@@ -110,10 +169,39 @@ function lampOn(){
 
     context.globalCompositeOperation = "source-over";
     darkmask.render(context);
+
+
+   //redraw rectangles
     context.beginPath();
+    rect1.path(context);
     rect2.path(context);
+    rect3.path(context);
+    rect4.path(context);
+    rect5.path(context);
+    rect6.path(context);
+    rect7.path(context);
+    rect8.path(context);
+    rect9.path(context);
+    rect10.path(context);
+    rect11.path(context);
+    rect12.path(context);
+    rect13.path(context);
     context.fill();
+
+    //blue rectangle
     drawRectangle(currRectX,currRectY, "#0000FF");
+
+    context.beginPath();
+    context.arc(26, 530, 5, 0, 2 * Math.PI, false);//526,500
+    context.closePath();
+    context.fillStyle = '#FFFF00';
+    context.fill();
+
+    context.beginPath();
+    context.arc(56, 530, 5, 0, 2 * Math.PI, false);//26,500
+    context.closePath();
+    context.fillStyle = '#00FF00';
+    context.fill();
 }
 function drawRectangle(x, y, style) {
    if (midPoint === false){
@@ -185,9 +273,9 @@ function canMoveTo(destX, destY) {
     var imgData = context.getImageData(destX, destY, 15, 15);
     var data = imgData.data;
     var canMove = 1; // 1 means: the rectangle can move
-    if (destX >= 0 && destX <= mazeWidth - 15 && destY >= 0 && destY <= mazeHeight - 15) { // check whether the rectangle would move inside the bounds of the canvas
+    if (destX >= 0 && destX <= mazeWidth - 15 && destY >= 0 && destY <= mazeHeight + 15) { // check whether the rectangle would move inside the bounds of the canvas
         for (var i = 0; i < 4 * 15 * 15; i += 4) {// look at all pixels
-            if (data[i] <= 20 && data[i + 1] <= 20 && data[i + 2] <= 10) { // black
+            if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) { // black
                 canMove = 0; // 0 means: the rectangle can't move
                 break;
             }
@@ -254,7 +342,7 @@ function makeWhite(x, y, w, h) {
     context.fillStyle = "white";
     context.fill();
 }
-drawMazeAndRectangle(30, 460);// { 30, 490 } is the position of the blue rectangle on the canvas
+drawMazeAndRectangle(30, 490);// { 30, 490 } is the position of the blue rectangle on the canvas
 window.addEventListener("keydown", moveRect, true);
 createTimer(120); // 2 minutes
 </script>
