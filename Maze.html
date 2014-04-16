@@ -66,13 +66,13 @@ function lightsOn(){
         radius: 10,
         samples: 50
     });
-    var light2 = new Lamp({
-        position: new Vec2(486, 538),
-        color: '#CCF',
-        distance: 20,
-        radius: 5,
-        samples: 50
-    });
+//    var light2 = new Lamp({
+//        position: new Vec2(486, 538),
+//        color: '#CCF',
+//        distance: 20,
+//        radius: 5,
+//        samples: 50
+//    });
     var disc = new DiscObject({
         center: new Vec2(100, 100),
         radius: 30
@@ -86,15 +86,15 @@ function lightsOn(){
         light: light1,
         objects: objects
     });
-    var lighting2 = new Lighting({
-        light: light2,
-        objects: [ disc, rect ]
-    });
+//    var lighting2 = new Lighting({
+//        light: light2,
+//        objects: [ disc, rect ]
+//    });
 
     var darkmask = new DarkMask({ lights: [light1, light2] });
 
     lighting1.compute(mazeWidth, canvas.height);
-    lighting2.compute(mazeWidth, canvas.height);
+//    lighting2.compute(mazeWidth, canvas.height);
     darkmask.compute(mazeWidth, canvas.height);
     //context.globalAlpha=0.10;
     context.fillStyle = "black";
@@ -110,9 +110,9 @@ function lightsOn(){
 
     context.globalCompositeOperation = "lighter";
     lighting1.render(context);
-    lighting2.render(context);
+//    lighting2.render(context);
 
-    context.globalCompositeOperation = "source-over";
+//    context.globalCompositeOperation = "source-over";
     darkmask.render(context);
 
 }
@@ -125,7 +125,7 @@ function drawRectangle(x, y, style) {
     context.closePath();
     context.fillStyle = style;
     context.fill();
-    lightsOn();
+//    lightsOn();
 }
 function moveRect(e) {
     var newX;
@@ -152,6 +152,9 @@ function moveRect(e) {
         case 68: // D key
             newX = currRectX + 3;
             newY = currRectY;
+            break;
+        case 76: //L key
+            lightsOn();
             break;
     }
     movingAllowed = canMoveTo(newX, newY);
