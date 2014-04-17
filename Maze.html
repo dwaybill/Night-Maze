@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html>
+<!-- This is a HTML5 Maze Game created by "http://www.codeproject.com/script/Membership/View.aspx?mid=8966127" ProgramFOX
+and modified by David Waybill 4/17/14-->
 <head>
-    <title>HTML5 maze game</title>
+    <title>HTML5 Night Maze</title>
     <script type="text/javascript" src="illuminated.js"></script>
 </head>
 <body>
-<h2>HTML5 Maze Game</h2>
-<p>
-    Welcome!<br />
-    This is a HTML5 Maze Game created by <a href="http://www.codeproject.com/script/Membership/View.aspx?mid=8966127">ProgramFOX</a> and modified by David Waybill
-</p>
-<canvas width="616" height="586" id="mazecanvas" style="position:absolute;">Can't load the maze game, because your browser doesn't support HTML5.</canvas>
-<!-- <canvas width="313" height="293" id="fov" style="position:absolute;"> -->
+
+
+ <canvas width="616" height="586" id="mazecanvas" style="position:absolute;">Can't load the maze game, because your browser doesn't support HTML5.</canvas>
+ <!-- <canvas width="313" height="293" id="fov" style="position:absolute;"> -->
 <noscript>JavaScript is not enabled. To play the game, you should enable it.</noscript>
 <script>
-// 30 (X), 460 (Y) RECTANGLE
-// 542 (center X), 122 (center Y) CIRCLE
+
 var canvas = document.getElementById("mazecanvas");
 var canvasfov = document.getElementById("fov");
 var context = canvas.getContext("2d");
@@ -25,6 +23,9 @@ var mazeWidth = 556;
 var mazeHeight = 556;
 var intervalVar;
 var midPoint = false;
+var lampsUsed = 0;
+var secondsToShow ='';
+var minutes = 0;
 
 function drawMazeAndRectangle(rectX, rectY) {
     makeWhite(0, 0, canvas.width, canvas.height);
@@ -34,20 +35,17 @@ function drawMazeAndRectangle(rectX, rectY) {
         drawRectangle(rectX, rectY, "#0000FF");
 
         context.beginPath();
-        context.arc(26, 530, 5, 0, 2 * Math.PI, false);//526,500
+        context.arc(526, 530, 5, 0, 2 * Math.PI, false);//526,500
         context.closePath();
         context.fillStyle = '#FFFF00';
         context.fill();
 
-        context.beginPath();
-        context.arc(56, 530, 5, 0, 2 * Math.PI, false);//26,500
-        context.closePath();
-        context.fillStyle = '#00FF00';
-        context.fill();
 
-        //context.font = "20px Arial";
-        //context.fillStyle = "blue";
-        //context.fillText("Reach the light switch(yellow circle)",mazeWidth / 4,560);
+
+        context.font = "20px Arial";
+        context.fillStyle = "blue";
+        context.textAlign = "center";
+        context.fillText("Reach the toilet(yellow circle)", canvas.width / 2,15);
 
     };
     mazeImg.src = "custom-maze.gif";
@@ -63,9 +61,9 @@ function lampOn(){
     ;
     var light1 = new Lamp({
         position: new Vec2(currRectX, currRectY),
-        distance: 400,
+        distance: 200,
         radius: 10,
-        samples: 200
+        samples: 50
     });
 
     var rect1 = new RectangleObject({
@@ -121,21 +119,11 @@ function lampOn(){
         bottomright: new Vec2(550,493)
     });
 
-
-
-
-
-
     var objects = [ rect1,rect2,rect3,rect4,rect5,rect6,rect7,rect8,rect9,rect10,rect11,rect12,rect13];
-
     var lighting1 = new Lighting({
         light: light1,
         objects: objects
     });
-//    var lighting2 = new Lighting({
-//        light: light2,
-//        objects: [ disc, rect ]
-//    });
 
     var darkmask = new DarkMask({ lights: [light1] });
 
@@ -192,16 +180,12 @@ function lampOn(){
     drawRectangle(currRectX,currRectY, "#0000FF");
 
     context.beginPath();
-    context.arc(26, 530, 5, 0, 2 * Math.PI, false);//526,500
-    context.closePath();
-    context.fillStyle = '#FFFF00';
-    context.fill();
-
-    context.beginPath();
     context.arc(56, 530, 5, 0, 2 * Math.PI, false);//26,500
     context.closePath();
     context.fillStyle = '#00FF00';
     context.fill();
+
+    lampsUsed ++;
 }
 function drawRectangle(x, y, style) {
    if (midPoint === false){
@@ -256,7 +240,8 @@ function moveRect(e) {
         makeWhite(0, 0, canvas.width, 30);
         context.font = "20px Arial";
         context.fillStyle = "blue";
-        context.fillText("Head back to bed(green circle)",canvas.width / 2,15);
+        context.fillText("Head back to bed(green circle) press L to make a lamp",canvas.width / 2,15);
+        lampOn();
     }
     else if (movingAllowed === 3 && midpoint === true) { // 3 means 'the rectangle reached the end point'
         clearInterval(intervalVar);
@@ -265,7 +250,9 @@ function moveRect(e) {
         context.fillStyle = "blue";
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.fillText("Congratulations!", canvas.width / 2, canvas.height / 2);
+        context.fillText("Congratulations!", canvas.width / 2, canvas.height / 2 -20);
+        context.fillText("Time left "+ minutes.toString() + ":" + secondsToShow, canvas.width / 2, canvas.height / 2 + 20);
+        context.fillText("Lamps used " + lampsUsed, canvas.width / 2, canvas.height / 2 + 60);
         window.removeEventListener("keydown", moveRect, true);
     }
 }
@@ -326,8 +313,8 @@ function createTimer(seconds) {
         }
         context.textAlign = "center";
         context.textBaseline = "middle";
-        var minutes = Math.floor(seconds / 60);
-        var secondsToShow = (seconds - minutes * 60).toString();
+        minutes = Math.floor(seconds / 60);
+        secondsToShow = (seconds - minutes * 60).toString();
         if (secondsToShow.length === 1) {
             secondsToShow = "0" + secondsToShow; // if the number of seconds is '5' for example, make sure that it is shown as '05'
         }
@@ -344,7 +331,7 @@ function makeWhite(x, y, w, h) {
 }
 drawMazeAndRectangle(30, 490);// { 30, 490 } is the position of the blue rectangle on the canvas
 window.addEventListener("keydown", moveRect, true);
-createTimer(120); // 2 minutes
+createTimer(240); // 4 minutes
 </script>
 </body>
 </html>
